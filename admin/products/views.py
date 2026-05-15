@@ -1,3 +1,51 @@
-from django.shortcuts import render
+import random
+from itertools import product
 
-# Create your views here.
+from django.template.context_processors import request
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from admin.products.models import Product, User
+from admin.products.serializers import ProductSerializer
+
+
+class ProductViewSet(viewsets.ViewSet):
+    def list(self, request): #/app/products
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = ProductSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def retrieve(self, request, pk=None):
+        product = Product.objects.get(id=pk)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+
+    def update(self, request, pk=None):
+        product = Product.objects.get(id=pk)
+        serializer = ProductSerializer(instance=product, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+    def destroy(self, request, pk=None):
+        product = Product.objects.get(id=pk)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class UserApiView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        user = random.choice(users)
+        return Response({
+            'id': user.id,
+        })
+
