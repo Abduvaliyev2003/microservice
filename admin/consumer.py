@@ -1,6 +1,7 @@
+import pika, json, os, django
 
-
-import pika, json
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'admin.settings')
+django.setup()
 
 from admin.products.models import Product
 
