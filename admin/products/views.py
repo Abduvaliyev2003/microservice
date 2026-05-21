@@ -6,9 +6,9 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from admin.products.models import Product, User
-from admin.products.producer import publish
-from admin.products.serializers import ProductSerializer
+from products.models import Product, User
+from products.producer import publish
+from products.serializers import ProductSerializer
 
 
 class ProductViewSet(viewsets.ViewSet):
